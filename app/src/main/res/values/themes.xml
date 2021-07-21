@@ -14,8 +14,13 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Widget.MaterialComponents.ShapeableImageView.Rounded" parent="">
+    <style name="RoundedShapeOverlay">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">16dp</item>
+        <item name="cornerSize">8dp</item>
+    </style>
+
+    <style name="CircularShapeOverlay">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">49%</item>
     </style>
 </resources>

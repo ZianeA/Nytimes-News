@@ -12,6 +12,8 @@ data class Article(
     val title: String,
     val abstract: String,
     val url: String,
+    val byline: String,
+    @SerialName("updated_date") val updatedDate: Instant,
     @SerialName("published_date") val publishedDate: Instant,
     val multimedia: List<Multimedia>
 )

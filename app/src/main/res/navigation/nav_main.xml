@@ -6,11 +6,23 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.aliziane.news.HomeFragment"
-        android:label="Home" />
+        android:label="Home">
+        <action
+            android:id="@+id/action_homeFragment_to_articleDetailsFragment"
+            app:destination="@id/articleDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchFragment"
         android:label="Search" />
     <fragment
         android:id="@+id/booksFragment"
         android:label="Books" />
+    <fragment
+        android:id="@+id/articleDetailsFragment"
+        android:name="com.aliziane.news.articledetails.ArticleDetailsFragment"
+        android:label="ArticleDetailsFragment">
+        <argument
+            android:name="article"
+            app:argType="string" />
+    </fragment>
 </navigation>

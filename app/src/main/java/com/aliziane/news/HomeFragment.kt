@@ -4,16 +4,11 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.createViewModelLazy
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.aliziane.news.databinding.FragmentHomeBinding
-import timber.log.Timber
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -27,9 +22,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val binding = FragmentHomeBinding.bind(view)
 
         val navController = findNavController()
-        val appBarConfig =
-            AppBarConfiguration(setOf(R.id.homeFragment, R.id.searchFragment, R.id.booksFragment))
-        binding.toolbar.setupWithNavController(navController, appBarConfig)
+        setupAppBar(binding.toolbar, navController)
 
         val providerFactory =
             object : AbstractSavedStateViewModelFactory(this, arguments) {
@@ -51,10 +44,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val epoxyController = HomeEpoxyController()
         binding.recyclerView.setController(epoxyController)
         binding.recyclerView.setItemSpacingDp(16)
+        epoxyController.onArticleClickListener = viewModel::onArticleClick
 
-        viewModel.posts.observe(viewLifecycleOwner) {
+        viewModel.posts.observe(viewLifecycleOwner, Observer {
             epoxyController.articles = it
             epoxyController.requestModelBuild()
+        })
+
+        lifecycleScope.launch {
+            viewModel.navigateToArticleDetails
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collect { arg ->
+                    val action =
+                        HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment(arg)
+                    navController.navigate(action)
+                }
         }
     }
 

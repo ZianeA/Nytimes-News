@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">News</string>
+    <string name="sort_by_new">New</string>
 </resources>
