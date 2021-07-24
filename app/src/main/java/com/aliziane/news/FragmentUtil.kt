@@ -20,7 +20,7 @@ val Fragment.injector: AppComponent
 
 fun Fragment.setupAppBar(toolbar: Toolbar, navController: NavController) {
     val appBarConfig =
-        AppBarConfiguration(setOf(R.id.homeFragment, R.id.searchFragment, R.id.booksFragment))
+        AppBarConfiguration(setOf(R.id.homeFragment, R.id.searchResultFragment, R.id.booksFragment))
     toolbar.setupWithNavController(navController, appBarConfig)
 }
 

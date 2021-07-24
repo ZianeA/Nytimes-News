@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.aliziane.news.databinding.FragmentHomeBinding
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 

@@ -16,8 +16,10 @@ data class Comment(
     @SerialName("userDisplayName") val author: String,
     @SerialName("picURL") val avatarUrl: String?,
     @SerialName("commentBody") val body: String,
-    @SerialName("createDate") @Serializable(with = InstantAsLongSerializer::class) val publishedDate: Instant,
-    @SerialName("updateDate") @Serializable(with = InstantAsLongSerializer::class) val updatedDate: Instant,
+    @SerialName("createDate") @Serializable(with = InstantAsLongSerializer::class)
+    val publishedDate: Instant,
+    @SerialName("updateDate") @Serializable(with = InstantAsLongSerializer::class)
+    val updatedDate: Instant,
     val recommendations: Int,
     val replyCount: Int
 )

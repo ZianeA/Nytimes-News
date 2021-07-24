@@ -1,6 +1,7 @@
 package com.aliziane.news
 
 import com.aliziane.news.articledetails.CommunityApi
+import com.aliziane.news.articlesearch.SearchApi
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -44,6 +45,10 @@ class NetworkModule {
     @Provides
     fun provideCommunityApi(retrofit: Retrofit): CommunityApi =
         retrofit.create(CommunityApi::class.java)
+
+    @Singleton
+    @Provides
+    fun provideSearchApi(retrofit: Retrofit): SearchApi = retrofit.create(SearchApi::class.java)
 
     companion object {
         private const val BASE_URL = "https://api.nytimes.com/svc/"

@@ -5,6 +5,7 @@ import com.aliziane.news.Article
 import com.aliziane.news.R
 import com.aliziane.news.ViewBindingKotlinModel
 import com.aliziane.news.databinding.ItemArticleDetailsBinding
+import com.aliziane.news.format
 import kotlinx.datetime.toJavaInstant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -16,13 +17,15 @@ data class ArticleDetailsEpoxyModel(private val article: Article) :
     override fun ItemArticleDetailsBinding.bind() {
         title.text = article.title
         articleAbstract.text = article.abstract
-        image.load(article.multimedia.first().url)
+        image.load(article.imageUrl) {
+            crossfade(true)
+            placeholder(R.drawable.ic_image)
+        }
         byline.text = article.byline
-
-        val formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
-            .withLocale(Locale.US)
-            .withZone(ZoneId.systemDefault())
-        publishedDate.text = formatter.format(article.publishedDate.toJavaInstant())
-        updatedDate.text = formatter.format(article.updatedDate.toJavaInstant())
+        publishedAndUpdatedDate.text = root.resources.getString(
+            R.string.published_and_update_date,
+            article.publishedDate.format(),
+            article.updatedDate.format()
+        )
     }
 }

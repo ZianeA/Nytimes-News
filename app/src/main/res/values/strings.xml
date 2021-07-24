@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">News</string>
     <string name="sort_by_new">New</string>
+    <string name="published_and_update_date">Published %1$s | Updated %2$s</string>
+    <string name="published_date_and_byline">%1$s - %2$s</string>
+    <string name="hint_search_articles">Search articles</string>
+    <string name="hint_search">Search</string>
 </resources>

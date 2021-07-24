@@ -17,7 +17,7 @@ data class ArticleEpoxyModel(
         publishedDate.text =
             DateUtils.getRelativeTimeSpanString(article.publishedDate.toEpochMilliseconds())
 
-        image.load(article.multimedia.first().url) {
+        image.load(article.imageUrl) {
             crossfade(true)
             placeholder(R.drawable.ic_image)
         }
