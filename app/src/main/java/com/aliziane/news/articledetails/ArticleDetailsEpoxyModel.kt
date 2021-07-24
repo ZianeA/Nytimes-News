@@ -6,9 +6,6 @@ import com.aliziane.news.R
 import com.aliziane.news.ViewBindingKotlinModel
 import com.aliziane.news.databinding.ItemArticleDetailsBinding
 import com.aliziane.news.format
-import kotlinx.datetime.toJavaInstant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 data class ArticleDetailsEpoxyModel(private val article: Article) :
@@ -19,7 +16,7 @@ data class ArticleDetailsEpoxyModel(private val article: Article) :
         articleAbstract.text = article.abstract
         image.load(article.imageUrl) {
             crossfade(true)
-            placeholder(R.drawable.ic_image)
+            placeholder(R.drawable.ic_placeholder_image)
         }
         byline.text = article.byline
         publishedAndUpdatedDate.text = root.resources.getString(

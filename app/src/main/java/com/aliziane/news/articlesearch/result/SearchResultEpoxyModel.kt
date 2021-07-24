@@ -14,7 +14,7 @@ class SearchResultEpoxyModel(private val article: Article) :
         } else {
             image.load(article.imageUrl) {
                 crossfade(true)
-                placeholder(R.drawable.ic_image)
+                placeholder(R.drawable.ic_placeholder_image)
             }
         }
         dateAndByline.text = root.resources.getString(

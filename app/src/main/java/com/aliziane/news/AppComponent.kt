@@ -3,6 +3,7 @@ package com.aliziane.news
 import android.app.Application
 import com.aliziane.news.articledetails.ArticleDetailsFragment
 import com.aliziane.news.articlesearch.SearchViewModel
+import com.aliziane.news.books.BooksViewModel
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Provider
@@ -16,6 +17,7 @@ interface AppComponent {
     fun inject(articleDetailsFragment: ArticleDetailsFragment)
 
     val searchViewModel: Provider<SearchViewModel.Factory>
+    val booksViewModel: Provider<BooksViewModel>
 
     @Component.Factory
     interface Factory {

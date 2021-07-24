@@ -3,7 +3,6 @@ package com.aliziane.news
 import android.text.format.DateUtils
 import android.view.View
 import coil.load
-import coil.transform.CircleCropTransformation
 import com.aliziane.news.databinding.ItemArticleBinding
 
 data class ArticleEpoxyModel(
@@ -19,7 +18,7 @@ data class ArticleEpoxyModel(
 
         image.load(article.imageUrl) {
             crossfade(true)
-            placeholder(R.drawable.ic_image)
+            placeholder(R.drawable.ic_placeholder_image)
         }
 
         root.setOnClickListener(onClickListener)

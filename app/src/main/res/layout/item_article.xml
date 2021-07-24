@@ -34,7 +34,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
             app:shapeAppearanceOverlay="@style/RoundedShapeOverlay"
-            tools:srcCompat="@drawable/ic_image" />
+            tools:srcCompat="@drawable/ic_placeholder_image" />
 
         <ImageView
             android:id="@+id/icon_time"
