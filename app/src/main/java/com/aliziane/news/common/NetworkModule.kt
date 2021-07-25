@@ -1,5 +1,6 @@
-package com.aliziane.news
+package com.aliziane.news.common
 
+import com.aliziane.news.home.StoriesApi
 import com.aliziane.news.articledetails.CommunityApi
 import com.aliziane.news.articlesearch.SearchApi
 import com.aliziane.news.books.BooksApi

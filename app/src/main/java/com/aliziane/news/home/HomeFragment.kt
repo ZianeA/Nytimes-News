@@ -1,4 +1,4 @@
-package com.aliziane.news
+package com.aliziane.news.home
 
 import android.content.Context
 import android.os.Bundle
@@ -6,10 +6,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
+import com.aliziane.news.R
+import com.aliziane.news.common.NyTimesApplication
 import com.aliziane.news.databinding.FragmentHomeBinding
+import com.aliziane.news.setupAppBar
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 

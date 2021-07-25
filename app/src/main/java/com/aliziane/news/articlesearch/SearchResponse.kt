@@ -1,6 +1,6 @@
 package com.aliziane.news.articlesearch
 
-import com.aliziane.news.Article
+import com.aliziane.news.home.Article
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

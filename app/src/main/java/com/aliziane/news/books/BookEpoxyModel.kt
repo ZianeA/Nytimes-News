@@ -2,7 +2,7 @@ package com.aliziane.news.books
 
 import coil.load
 import com.aliziane.news.R
-import com.aliziane.news.ViewBindingKotlinModel
+import com.aliziane.news.common.ViewBindingKotlinModel
 import com.aliziane.news.databinding.ItemBookBinding
 
 class BookEpoxyModel(private val book: Book) :

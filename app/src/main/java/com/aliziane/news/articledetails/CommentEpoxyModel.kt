@@ -3,7 +3,7 @@ package com.aliziane.news.articledetails
 import android.text.format.DateUtils
 import coil.load
 import com.aliziane.news.R
-import com.aliziane.news.ViewBindingKotlinModel
+import com.aliziane.news.common.ViewBindingKotlinModel
 import com.aliziane.news.databinding.ItemCommentBinding
 import kotlinx.datetime.Instant
 import java.text.DecimalFormat

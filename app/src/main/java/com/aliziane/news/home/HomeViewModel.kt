@@ -1,12 +1,12 @@
-package com.aliziane.news
+package com.aliziane.news.home
 
 import androidx.lifecycle.*
+import com.aliziane.news.common.encodeToString
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 

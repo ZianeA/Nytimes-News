@@ -14,6 +14,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import androidx.savedstate.SavedStateRegistryOwner
+import com.aliziane.news.common.AppComponent
+import com.aliziane.news.common.NyTimesApplication
 
 val Fragment.injector: AppComponent
     get() = (requireActivity().application as NyTimesApplication).appComponent

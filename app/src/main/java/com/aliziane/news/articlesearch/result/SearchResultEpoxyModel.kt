@@ -2,7 +2,10 @@ package com.aliziane.news.articlesearch.result
 
 import coil.load
 import com.aliziane.news.*
+import com.aliziane.news.common.ViewBindingKotlinModel
+import com.aliziane.news.common.hide
 import com.aliziane.news.databinding.ItemSearchResultBinding
+import com.aliziane.news.home.Article
 
 class SearchResultEpoxyModel(private val article: Article) :
     ViewBindingKotlinModel<ItemSearchResultBinding>(R.layout.item_search_result) {

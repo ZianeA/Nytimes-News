@@ -1,4 +1,4 @@
-package com.aliziane.news
+package com.aliziane.news.home
 
 import com.airbnb.epoxy.AsyncEpoxyController
 

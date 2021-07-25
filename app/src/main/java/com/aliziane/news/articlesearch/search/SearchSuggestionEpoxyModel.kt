@@ -2,7 +2,7 @@ package com.aliziane.news.articlesearch.search
 
 import android.view.View
 import com.aliziane.news.R
-import com.aliziane.news.ViewBindingKotlinModel
+import com.aliziane.news.common.ViewBindingKotlinModel
 import com.aliziane.news.databinding.ItemSearchSuggestionBinding
 
 class SearchSuggestionEpoxyModel(

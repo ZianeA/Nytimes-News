@@ -1,4 +1,4 @@
-package com.aliziane.news
+package com.aliziane.news.home
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.SerialName

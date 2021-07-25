@@ -1,8 +1,10 @@
-package com.aliziane.news
+package com.aliziane.news.home
 
 import android.text.format.DateUtils
 import android.view.View
 import coil.load
+import com.aliziane.news.R
+import com.aliziane.news.common.ViewBindingKotlinModel
 import com.aliziane.news.databinding.ItemArticleBinding
 
 data class ArticleEpoxyModel(

@@ -1,6 +1,7 @@
-package com.aliziane.news
+package com.aliziane.news.common
 
 import android.app.Application
+import com.aliziane.news.BuildConfig
 import timber.log.Timber
 
 class NyTimesApplication : Application() {

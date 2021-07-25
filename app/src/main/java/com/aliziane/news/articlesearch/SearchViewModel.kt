@@ -1,13 +1,11 @@
 package com.aliziane.news.articlesearch
 
 import androidx.lifecycle.*
-import com.aliziane.news.Article
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import timber.log.Timber
 
 class SearchViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,

@@ -1,4 +1,4 @@
-package com.aliziane.news
+package com.aliziane.news.home
 
 import retrofit2.http.GET
 import retrofit2.http.Path

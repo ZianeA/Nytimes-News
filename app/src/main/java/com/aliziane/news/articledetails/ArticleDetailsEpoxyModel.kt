@@ -1,12 +1,11 @@
 package com.aliziane.news.articledetails
 
 import coil.load
-import com.aliziane.news.Article
+import com.aliziane.news.home.Article
 import com.aliziane.news.R
-import com.aliziane.news.ViewBindingKotlinModel
+import com.aliziane.news.common.ViewBindingKotlinModel
 import com.aliziane.news.databinding.ItemArticleDetailsBinding
 import com.aliziane.news.format
-import java.util.*
 
 data class ArticleDetailsEpoxyModel(private val article: Article) :
     ViewBindingKotlinModel<ItemArticleDetailsBinding>(R.layout.item_article_details) {

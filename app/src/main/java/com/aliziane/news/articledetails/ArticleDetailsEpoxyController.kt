@@ -1,8 +1,7 @@
 package com.aliziane.news.articledetails
 
 import com.airbnb.epoxy.AsyncEpoxyController
-import com.airbnb.epoxy.SimpleEpoxyModel
-import com.aliziane.news.Article
+import com.aliziane.news.home.Article
 
 class ArticleDetailsEpoxyController : AsyncEpoxyController() {
     var article by EpoxyAutoBuild<Article?>(null)

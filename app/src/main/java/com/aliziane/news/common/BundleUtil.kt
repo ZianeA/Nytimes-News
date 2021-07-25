@@ -1,4 +1,4 @@
-package com.aliziane.news
+package com.aliziane.news.common
 
 import androidx.lifecycle.SavedStateHandle
 import kotlinx.serialization.InternalSerializationApi

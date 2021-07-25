@@ -1,4 +1,4 @@
-package com.aliziane.news
+package com.aliziane.news.common
 
 import okhttp3.Interceptor
 import okhttp3.Response

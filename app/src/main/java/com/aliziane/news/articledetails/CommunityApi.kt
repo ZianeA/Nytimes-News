@@ -1,8 +1,6 @@
 package com.aliziane.news.articledetails
 
-import com.aliziane.news.TopStoriesResponse
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CommunityApi {

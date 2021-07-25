@@ -1,7 +1,7 @@
 package com.aliziane.news.articlesearch.result
 
 import com.airbnb.epoxy.AsyncEpoxyController
-import com.aliziane.news.Article
+import com.aliziane.news.home.Article
 import com.aliziane.news.articledetails.EpoxyAutoBuild
 
 class SearchResultEpoxyController : AsyncEpoxyController() {

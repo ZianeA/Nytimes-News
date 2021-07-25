@@ -14,4 +14,4 @@
 .cxx
 local.properties
 
-/app/src/main/java/com/aliziane/news/ApiKey.kt
+/app/src/main/java/com/aliziane/news/common/ApiKey.kt

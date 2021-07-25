@@ -1,9 +1,10 @@
-package com.aliziane.news
+package com.aliziane.news.common
 
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.viewbinding.ViewBinding
 import com.airbnb.epoxy.EpoxyModel
+import com.aliziane.news.R
 import java.lang.reflect.Method
 import java.lang.reflect.ParameterizedType
 import java.util.concurrent.ConcurrentHashMap

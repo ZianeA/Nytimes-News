@@ -10,6 +10,8 @@ data class CommentResponse(val results: Results) {
     data class Results(val comments: List<Comment>)
 }
 
+fun CommentResponse.toComments() = this.results.comments
+
 @Serializable
 data class Comment(
     @SerialName("commentID") val id: Int,

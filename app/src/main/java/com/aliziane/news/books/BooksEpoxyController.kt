@@ -28,9 +28,9 @@ class BooksEpoxyController : AsyncEpoxyController() {
                 models(bookModels)
 
                 val snapHelper = GravitySnapHelper(Gravity.START)
-                onBind { _, rv, _ ->
-                    snapHelper.attachToRecyclerView(rv)
-                    rv.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+                onBind { _, carousel, _ ->
+                    snapHelper.attachToRecyclerView(carousel)
+                    carousel.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
                 }
             }
         }

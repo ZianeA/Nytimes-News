@@ -1,6 +1,7 @@
-package com.aliziane.news
+package com.aliziane.news.common
 
 import android.app.Application
+import com.aliziane.news.home.HomeFragment
 import com.aliziane.news.articledetails.ArticleDetailsFragment
 import com.aliziane.news.articlesearch.SearchViewModel
 import com.aliziane.news.books.BooksViewModel
