@@ -22,6 +22,7 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
+            app:itemIconTint="@color/bottom_navigation"
             android:layout_width="match_parent"
             app:labelVisibilityMode="unlabeled"
             android:layout_height="wrap_content"

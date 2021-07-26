@@ -1,8 +1,12 @@
 package com.aliziane.news.home
 
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
@@ -26,6 +30,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         val navController = findNavController()
         setupAppBar(binding.toolbar, navController)
+        setupOptionsMenu(binding.toolbar)
 
         val providerFactory =
             object : AbstractSavedStateViewModelFactory(this, arguments) {
@@ -65,8 +70,38 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private fun setupOptionsMenu(toolbar: Toolbar) {
+        toolbar.inflateMenu(R.menu.menu_home)
+        val modeToggle = toolbar.menu.findItem(R.id.dark_mode_toggle)
+        if (isNightModeOn()) {
+            modeToggle.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_light_mode)
+        } else {
+            modeToggle.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_dark_mode)
+        }
+
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.dark_mode_toggle -> {
+                    if (isNightModeOn()) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    } else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    }
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
     override fun onAttach(context: Context) {
         (requireActivity().application as NyTimesApplication).appComponent.inject(this)
         super.onAttach(context)
     }
+
+    private fun isNightModeOn() =
+        AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES || isSystemNightModeOn()
+
+    private fun isSystemNightModeOn() = resources.configuration.uiMode and
+            Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 }

@@ -9,7 +9,8 @@
         android:id="@+id/app_bar_layout"
         style="@style/Widget.MaterialComponents.Toolbar.Surface"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/search_bar"
@@ -48,8 +49,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="16dp"
+        android:padding="8dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

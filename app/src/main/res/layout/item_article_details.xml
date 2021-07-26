@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="8dp"
-    app:cardElevation="0dp"
+    app:cardElevation="@dimen/card_elevation"
     app:contentPadding="16dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -75,7 +75,7 @@
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_marginTop="16dp"
-            android:text="Read More"
+            android:text="@string/button_read_more"
             app:layout_constraintEnd_toEndOf="@+id/image"
             app:layout_constraintStart_toStartOf="@+id/image"
             app:layout_constraintTop_toBottomOf="@+id/published_and_updated_date"

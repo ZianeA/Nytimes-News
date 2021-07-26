@@ -9,4 +9,10 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="background">#F1F1F1</color>
+
+    <color name="system_ui_scrim_black">#40000000</color> <!-- 25% black -->
+    <!-- We use a dark scrim by default since light status is API 23+ -->
+    <color name="status_bar_scrim">@color/system_ui_scrim_black</color>
+    <!-- We use a dark scrim by default since light nav bar is API 27+ -->
+    <color name="nav_bar_scrim">@color/system_ui_scrim_black</color>
 </resources>
