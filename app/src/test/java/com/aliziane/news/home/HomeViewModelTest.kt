@@ -6,9 +6,9 @@ import app.cash.turbine.test
 import com.aliziane.news.CoroutineRule
 import com.aliziane.news.R
 import com.aliziane.news.common.encodeToString
+import com.aliziane.news.fakeArticle
 import com.jraska.livedata.test
 import io.kotest.matchers.shouldBe
-import kotlinx.datetime.Clock
 import org.junit.Rule
 import org.junit.Test
 import java.io.IOException
@@ -68,16 +68,3 @@ class FakeStoriesApi : StoriesApi {
         return response
     }
 }
-
-val fakeMultimedia =
-    Article.Multimedia("https://fakeUrl.com/fake_image.png", 100, 100, "fake caption")
-val fakeArticle = Article(
-    "fake title",
-    "fake abstract",
-    "fake kicker",
-    "https://fakeUrl.com",
-    "fake byline",
-    Clock.System.now(),
-    Clock.System.now(),
-    listOf(fakeMultimedia)
-)

@@ -3,12 +3,17 @@ package com.aliziane.news.articlesearch.result
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.aliziane.news.R
 import com.aliziane.news.databinding.FragmentSearchResultBinding
 import com.aliziane.news.fragmentSavedStateViewModels
 import com.aliziane.news.injector
 import com.aliziane.news.navGraphSavedStateViewModels
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
 class SearchResultFragment : Fragment(R.layout.fragment_search_result) {
@@ -32,5 +37,21 @@ class SearchResultFragment : Fragment(R.layout.fragment_search_result) {
             navController.navigate(action)
         }
         viewModel.searchQuery.observe(viewLifecycleOwner) { binding.searchBarQuery.text = it }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.viewFlipper.displayedChild =
+                if (isLoading) Flipper.LOADING.ordinal else Flipper.CONTENT.ordinal
+        }
+
+        viewModel.message
+            .onEach { msg ->
+                Snackbar.make(view, getString(msg), Snackbar.LENGTH_LONG)
+                    .apply { anchorView = binding.snackbarAnchor }
+                    .show()
+            }
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .launchIn(lifecycleScope)
     }
+
+    enum class Flipper { LOADING, CONTENT }
 }

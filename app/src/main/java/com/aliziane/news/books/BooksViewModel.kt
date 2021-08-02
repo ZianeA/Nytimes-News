@@ -26,7 +26,7 @@ class BooksViewModel @Inject constructor(
     }
 
     private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> = _isLoading
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     private val _message = Channel<Int>(Channel.BUFFERED)
     val message = _message.receiveAsFlow()

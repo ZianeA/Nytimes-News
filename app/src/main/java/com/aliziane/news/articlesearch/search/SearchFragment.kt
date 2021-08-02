@@ -10,11 +10,15 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.aliziane.news.R
+import com.aliziane.news.common.showIf
 import com.aliziane.news.databinding.FragmentSearchBinding
 import com.aliziane.news.fragmentSavedStateViewModels
 import com.aliziane.news.injector
 import com.aliziane.news.navGraphSavedStateViewModels
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
@@ -52,5 +56,18 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         }
 
         viewModel.searchSuggestions.observe(viewLifecycleOwner) { epoxyController.suggestions = it }
+
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressIndicator.showIf { isLoading }
+        }
+
+        viewModel.message
+            .onEach { msg ->
+                Snackbar.make(view, getString(msg), Snackbar.LENGTH_LONG)
+                    .apply { anchorView = binding.snackbarAnchor }
+                    .show()
+            }
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .launchIn(lifecycleScope)
     }
 }

@@ -54,6 +54,7 @@ dependencies {
     testImplementation 'io.kotest:kotest-assertions-core:4.6.1'
     testImplementation 'com.jraska.livedata:testing-ktx:1.2.0'
     testImplementation "androidx.arch.core:core-testing:2.1.0"
+    implementation 'com.google.testparameterinjector:test-parameter-injector:1.4'
 
     implementation "androidx.fragment:fragment-ktx:1.4.0-alpha04"
 
