@@ -1,16 +1,11 @@
 package com.aliziane.news.articledetails
 
-import androidx.lifecycle.MutableLiveData
 import kotlinx.datetime.Clock
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaInstant
-import kotlinx.datetime.toLocalDateTime
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
-import java.text.SimpleDateFormat
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 import kotlin.math.abs
 

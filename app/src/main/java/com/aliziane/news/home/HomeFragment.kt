@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
+import android.widget.ViewFlipper
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -14,7 +15,10 @@ import com.aliziane.news.R
 import com.aliziane.news.common.NyTimesApplication
 import com.aliziane.news.databinding.FragmentHomeBinding
 import com.aliziane.news.setupAppBar
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
@@ -54,20 +58,33 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.recyclerView.setItemSpacingDp(16)
         epoxyController.onArticleClickListener = viewModel::onArticleClick
 
-        viewModel.posts.observe(viewLifecycleOwner, Observer {
+        viewModel.articles.observe(viewLifecycleOwner, Observer {
             epoxyController.articles = it
             epoxyController.requestModelBuild()
         })
 
-        lifecycleScope.launch {
-            viewModel.navigateToArticleDetails
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collect { arg ->
-                    val action =
-                        HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment(arg)
-                    navController.navigate(action)
-                }
-        }
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+            binding.viewFlipper.displayedChild =
+                if (isLoading) Flipper.LOADING.ordinal else Flipper.CONTENT.ordinal
+        })
+
+        viewModel.navigateToArticleDetails
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { arg ->
+                val action =
+                    HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment(arg)
+                navController.navigate(action)
+            }
+            .launchIn(lifecycleScope)
+
+        viewModel.message
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { msg ->
+                Snackbar.make(view, msg, Snackbar.LENGTH_LONG)
+                    .apply { anchorView = binding.snackbarAnchor }
+                    .show()
+            }
+            .launchIn(lifecycleScope)
     }
 
     private fun setupOptionsMenu(toolbar: Toolbar) {
@@ -104,4 +121,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun isSystemNightModeOn() = resources.configuration.uiMode and
             Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+
+    enum class Flipper { LOADING, CONTENT }
 }

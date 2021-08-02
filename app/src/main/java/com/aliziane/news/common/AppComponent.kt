@@ -11,7 +11,7 @@ import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [NetworkModule::class])
+@Component(modules = [NetworkModule::class, DispatcherModule::class])
 interface AppComponent {
     fun inject(activity: MainActivity)
     fun inject(homeFragment: HomeFragment)
