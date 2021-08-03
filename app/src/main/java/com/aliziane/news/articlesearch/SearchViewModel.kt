@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import com.aliziane.news.R
 import com.aliziane.news.common.DispatcherProvider
+import com.aliziane.news.common.encodeToString
 import com.aliziane.news.common.runAndCatch
 import com.aliziane.news.home.Article
 import dagger.assisted.Assisted
@@ -24,13 +25,13 @@ class SearchViewModel @AssistedInject constructor(
         .asFlow()
         .distinctUntilChanged()
         .debounce(500)
-        .transformLatest<String, List<String>> { query ->
+        .transformLatest<String, List<Article>> { query ->
             if (query.isBlank()) {
                 emit(emptyList())
             } else {
                 runAndCatch {
                     _isLoading.value = true
-                    api.search(query).toArticles().map { article -> article.title }
+                    api.search(query).toArticles()
                 }
                     .also { _isLoading.value = false }
                     .onSuccess { emit(it) }
@@ -58,12 +59,21 @@ class SearchViewModel @AssistedInject constructor(
     private val _message = Channel<Int>(Channel.BUFFERED)
     val message = _message.receiveAsFlow()
 
+    private val _navigateToArticleDetails = Channel<String>(Channel.BUFFERED)
+    val navigateToArticleDetails = _navigateToArticleDetails.receiveAsFlow()
+
     fun onQueryChange(query: String?) {
         savedStateHandle.set(KEY_SUGGESTION_QUERY, query.orEmpty())
     }
 
     fun onQuerySubmit(query: String?) {
         savedStateHandle.set(KEY_RESULT_QUERY, query.orEmpty())
+    }
+
+    fun onArticleClick(article: Article) {
+        viewModelScope.launch(dispatcherProvider.main) {
+            _navigateToArticleDetails.send(article.encodeToString())
+        }
     }
 
     companion object {

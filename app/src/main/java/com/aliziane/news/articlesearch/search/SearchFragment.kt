@@ -1,37 +1,45 @@
 package com.aliziane.news.articlesearch.search
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
+import com.aliziane.news.NavMainDirections
 import com.aliziane.news.R
 import com.aliziane.news.common.showIf
 import com.aliziane.news.databinding.FragmentSearchBinding
-import com.aliziane.news.fragmentSavedStateViewModels
 import com.aliziane.news.injector
 import com.aliziane.news.navGraphSavedStateViewModels
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
-class SearchFragment : Fragment(R.layout.fragment_search) {
+class SearchFragment : Fragment(R.layout.fragment_search),
+    NavController.OnDestinationChangedListener {
+
     private val viewModel by navGraphSavedStateViewModels(R.id.nav_search) {
         injector.searchViewModel.get().create(it)
+    }
+
+    private val navController by lazy { findNavController() }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        navController.addOnDestinationChangedListener(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentSearchBinding.bind(view)
-        val navController = findNavController()
 
         val epoxyController = SearchEpoxyController()
+        epoxyController.onSuggestionClickListener = viewModel::onArticleClick
         binding.recyclerView.setController(epoxyController)
         binding.recyclerView.setItemSpacingDp(8)
         epoxyController.history = listOf("My knee", "Balloon")
@@ -39,9 +47,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         binding.searchBoxLayout.setStartIconOnClickListener { navController.navigateUp() }
         binding.searchBox.apply {
             focusAndShowKeyboard()
-            setOnEditorActionListener { v, actionId, _ ->
+            setOnEditorActionListener { tv, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    viewModel.onQuerySubmit(v.text?.toString())
+                    viewModel.onQuerySubmit(tv.text?.toString())
                     navController.navigateUp()
                     true
                 } else {
@@ -69,5 +77,28 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             }
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .launchIn(lifecycleScope)
+
+        viewModel.navigateToArticleDetails
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { arg ->
+                val action = NavMainDirections.actionGlobalArticleDetailsFragment(arg)
+                navController.navigate(action)
+            }
+            .launchIn(lifecycleScope)
+    }
+
+    override fun onDestinationChanged(
+        controller: NavController,
+        destination: NavDestination,
+        arguments: Bundle?
+    ) {
+        if (destination.id == R.id.searchResultFragment) {
+            viewModel.onQueryChange(null)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        navController.removeOnDestinationChangedListener(this)
     }
 }

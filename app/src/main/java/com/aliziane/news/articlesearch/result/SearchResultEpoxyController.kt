@@ -6,11 +6,12 @@ import com.aliziane.news.articledetails.EpoxyAutoBuild
 
 class SearchResultEpoxyController : AsyncEpoxyController() {
     var articles by EpoxyAutoBuild(emptyList<Article>())
+    var onSearchResultClickListener: ((article: Article) -> Unit)? = null
 
     override fun buildModels() {
-        articles.forEach {
-            SearchResultEpoxyModel(it)
-                .id(it.url)
+        articles.forEach { article ->
+            SearchResultEpoxyModel(article) { onSearchResultClickListener?.invoke(article) }
+                .id(article.url)
                 .addTo(this)
         }
     }

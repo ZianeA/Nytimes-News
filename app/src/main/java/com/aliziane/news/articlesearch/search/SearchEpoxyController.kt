@@ -2,28 +2,30 @@ package com.aliziane.news.articlesearch.search
 
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.aliziane.news.articledetails.EpoxyAutoBuild
+import com.aliziane.news.home.Article
 
 class SearchEpoxyController : AsyncEpoxyController() {
     var history by EpoxyAutoBuild(emptyList<String>())
-    var suggestions by EpoxyAutoBuild(emptyList<String>())
+    var suggestions by EpoxyAutoBuild(emptyList<Article>())
 
-    var onItemSelectListener: ((text: String) -> Unit)? = null
-    var onItemDeleteListener: ((text: String) -> Unit)? = null
+    var onSuggestionClickListener: ((suggestion: Article) -> Unit)? = null
+    var onHistoryClickListener: ((history: String) -> Unit)? = null
+    var onHistoryDeleteListener: ((history: String) -> Unit)? = null
 
     override fun buildModels() {
         history.forEach {
             SearchHistoryEpoxyModel(
                 it,
-                { _ -> onItemSelectListener?.invoke(it) },
-                { _ -> onItemSelectListener?.invoke(it) }
+                { _ -> onHistoryClickListener?.invoke(it) },
+                { _ -> onHistoryDeleteListener?.invoke(it) }
             )
                 .id(it)
                 .addTo(this)
         }
 
-        suggestions.forEach {
-            SearchSuggestionEpoxyModel(it) { _ -> onItemSelectListener?.invoke(it) }
-                .id(it)
+        suggestions.forEach { article ->
+            SearchSuggestionEpoxyModel(article.title) { onSuggestionClickListener?.invoke(article) }
+                .id(article.url)
                 .addTo(this)
         }
     }

@@ -5,17 +5,14 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.aliziane.news.CoroutineRule
 import com.aliziane.news.R
+import com.aliziane.news.common.encodeToString
+import com.aliziane.news.fakeArticle
 import com.aliziane.news.fakeDoc
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.jraska.livedata.test
-import io.kotest.assertions.assertSoftly
-import io.kotest.data.forAll
-import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldContain
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 import org.junit.Test
@@ -40,12 +37,9 @@ class SearchViewModelTest {
     fun `display search result`() = coroutineRule.runBlockingTest {
         viewModel.searchResult.test()
 
-        viewModel.onQuerySubmit("new query")
+        viewModel.onQuerySubmit(fakeApi.fakeQuery)
 
-        assertSoftly(viewModel.searchResult.value!!) {
-            shouldBe(fakeApi.response.toArticles())
-            forAll { it.title shouldContain "new query" }
-        }
+        viewModel.searchResult.value shouldBe fakeApi.fakeQueryResponse.toArticles()
     }
 
     @Test
@@ -56,7 +50,7 @@ class SearchViewModelTest {
 
         viewModel.onQuerySubmit(query)
 
-        viewModel.searchResult.value shouldBe fakeApi.response.toArticles()
+        viewModel.searchResult.value shouldBe fakeApi.emptyQueryResponse.toArticles()
     }
 
     @Test
@@ -100,14 +94,11 @@ class SearchViewModelTest {
     fun `display search suggestions`() = coroutineRule.runBlockingTest {
         viewModel.searchSuggestions.test()
 
-        viewModel.onQueryChange("new query")
+        viewModel.onQueryChange(fakeApi.fakeQuery)
         // Advance time to circumvent debounce
         coroutineRule.testDispatcher.advanceTimeBy(1000)
 
-        assertSoftly(viewModel.searchSuggestions.value!!) {
-            shouldBe(fakeApi.response.toArticles().map { it.title })
-            forAll { it shouldContain "new query" }
-        }
+        viewModel.searchSuggestions.value shouldBe fakeApi.fakeQueryResponse.toArticles()
     }
 
     @Test
@@ -128,7 +119,7 @@ class SearchViewModelTest {
         fakeApi.fail = true
         viewModel.searchSuggestions.test()
 
-        viewModel.onQueryChange("new query")
+        viewModel.onQueryChange(fakeApi.fakeQuery)
         // Advance time to circumvent debounce
         coroutineRule.testDispatcher.advanceTimeBy(1000)
 
@@ -140,28 +131,38 @@ class SearchViewModelTest {
         viewModel.searchSuggestions.test()
         val testObserver = viewModel.isLoading.test()
 
-        viewModel.onQueryChange("new query")
+        viewModel.onQueryChange(fakeApi.fakeQuery)
         // Advance time to circumvent debounce
         coroutineRule.testDispatcher.advanceTimeBy(1000)
 
         testObserver.assertValueHistory(false, true, false)
     }
+
+    @Test
+    fun `navigate to article details when article is clicked`() = coroutineRule.runBlockingTest {
+        viewModel.onArticleClick(fakeArticle)
+
+        viewModel.navigateToArticleDetails.test { awaitItem() shouldBe fakeArticle.encodeToString() }
+    }
 }
 
 class FakeSearchApi : SearchApi {
-    private var docs = mutableListOf(fakeDoc)
-
-    var response = SearchResponse(SearchResponse.Response(docs))
+    var fakeQuery = "fake query"
+    var fakeQueryResponse =
+        createResponse(fakeDoc.copy(headline = fakeDoc.headline.copy(main = fakeQuery)))
+    var emptyQueryResponse = createResponse(fakeDoc)
+    var emptyResponse = createResponse()
     var fail = false
 
     override suspend fun search(query: String?): SearchResponse {
-        if (fail) throw IOException()
-        if (query != null) {
-            docs.replaceAll { doc ->
-                val headline = doc.headline
-                doc.copy(headline = headline.copy(main = headline.main + query))
-            }
+        return when {
+            fail -> throw IOException()
+            query.isNullOrBlank() -> emptyQueryResponse
+            query == fakeQuery -> fakeQueryResponse
+            else -> emptyResponse
         }
-        return response
     }
+
+    private fun createResponse(vararg docs: SearchResponse.Response.Doc) =
+        SearchResponse(SearchResponse.Response(docs.toList()))
 }

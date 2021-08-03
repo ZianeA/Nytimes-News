@@ -6,11 +6,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.aliziane.news.R
+import com.aliziane.news.*
 import com.aliziane.news.databinding.FragmentSearchResultBinding
-import com.aliziane.news.fragmentSavedStateViewModels
-import com.aliziane.news.injector
-import com.aliziane.news.navGraphSavedStateViewModels
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -27,6 +24,7 @@ class SearchResultFragment : Fragment(R.layout.fragment_search_result) {
         val navController = findNavController()
 
         val epoxyController = SearchResultEpoxyController()
+        epoxyController.onSearchResultClickListener = viewModel::onArticleClick
         binding.recyclerView.setController(epoxyController)
         binding.recyclerView.setItemSpacingDp(8)
         viewModel.searchResult.observe(viewLifecycleOwner) { epoxyController.articles = it }
@@ -48,6 +46,14 @@ class SearchResultFragment : Fragment(R.layout.fragment_search_result) {
                 Snackbar.make(view, getString(msg), Snackbar.LENGTH_LONG)
                     .apply { anchorView = binding.snackbarAnchor }
                     .show()
+            }
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .launchIn(lifecycleScope)
+
+        viewModel.navigateToArticleDetails
+            .onEach { arg ->
+                val action = NavMainDirections.actionGlobalArticleDetailsFragment(arg)
+                navController.navigate(action)
             }
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .launchIn(lifecycleScope)

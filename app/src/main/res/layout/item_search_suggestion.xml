@@ -7,6 +7,7 @@
     android:drawableStart="@drawable/ic_search"
     android:drawablePadding="16dp"
     android:gravity="center_vertical"
+    android:background="?selectableItemBackground"
     android:paddingHorizontal="16dp"
     android:paddingVertical="8dp"
     tools:text="This is a headline" />

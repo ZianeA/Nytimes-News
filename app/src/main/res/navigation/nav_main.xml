@@ -8,9 +8,6 @@
         android:id="@+id/homeFragment"
         android:name="com.aliziane.news.home.HomeFragment"
         android:label="Home">
-        <action
-            android:id="@+id/action_homeFragment_to_articleDetailsFragment"
-            app:destination="@id/articleDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/booksFragment"
@@ -38,4 +35,7 @@
                 app:destination="@id/searchFragment" />
         </fragment>
     </navigation>
+    <action
+        android:id="@+id/action_global_articleDetailsFragment"
+        app:destination="@id/articleDetailsFragment" />
 </navigation>

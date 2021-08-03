@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
+import com.aliziane.news.NavMainDirections
 import com.aliziane.news.R
 import com.aliziane.news.common.NyTimesApplication
 import com.aliziane.news.databinding.FragmentHomeBinding
@@ -71,8 +72,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewModel.navigateToArticleDetails
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { arg ->
-                val action =
-                    HomeFragmentDirections.actionHomeFragmentToArticleDetailsFragment(arg)
+                val action = NavMainDirections.actionGlobalArticleDetailsFragment(arg)
                 navController.navigate(action)
             }
             .launchIn(lifecycleScope)
