@@ -1,6 +1,8 @@
 package com.aliziane.news.articledetails
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -37,6 +39,7 @@ class ArticleDetailsFragment : Fragment(R.layout.fragment_article_details) {
                 )
             navController.navigate(action)
         }
+        epoxyController.onReadMoreClickListener = viewModel::onReadMoreClick
         binding.recyclerView.setController(epoxyController)
         binding.recyclerView.setItemSpacingDp(8)
 
@@ -56,6 +59,14 @@ class ArticleDetailsFragment : Fragment(R.layout.fragment_article_details) {
                 Snackbar.make(view, msg, Snackbar.LENGTH_LONG)
                     .apply { anchorView = binding.snackbarAnchor }
                     .show()
+            }
+            .launchIn(lifecycleScope)
+
+        viewModel.navigateToFullArticle
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { url ->
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                requireContext().startActivity(intent)
             }
             .launchIn(lifecycleScope)
     }

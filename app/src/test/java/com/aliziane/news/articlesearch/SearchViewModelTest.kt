@@ -153,12 +153,12 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `display search history`() {
+    fun `display search history`() = coroutineRule.runBlockingTest {
         viewModel.searchHistory.test().value() shouldBe fakeStorage.searchHistory
     }
 
     @Test
-    fun `save search history`() {
+    fun `save search history`() = coroutineRule.runBlockingTest {
         val testObserver = viewModel.searchHistory.test()
 
         val item = "new history"
@@ -173,14 +173,14 @@ class SearchViewModelTest {
     @Test
     fun `ignore search history when null or blank`(
         @TestParameter("null", "", "  ") query: String?
-    ) {
+    ) = coroutineRule.runBlockingTest {
         viewModel.onQuerySubmit(query)
 
         fakeStorage.searchHistory.shouldNotContain(query)
     }
 
     @Test
-    fun `delete old search history when exceeding capacity`() {
+    fun `delete old search history when exceeding capacity`() = coroutineRule.runBlockingTest {
         // Create a set containing the string representation of the numbers
         // from 0 to (exclusive) capacity of the search history
         val history = List(SEARCH_HISTORY_MAX_ITEMS) { i -> i.toString() }.toSet()
@@ -195,7 +195,7 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `filter search history when query changes`() {
+    fun `filter search history when query changes`() = coroutineRule.runBlockingTest {
         val testObserver = viewModel.searchHistory.test()
         fakeStorage.searchHistory = setOf("apple", "banana")
         // Trigger the update
@@ -211,7 +211,7 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `delete search history`() {
+    fun `delete search history`() = coroutineRule.runBlockingTest {
         val testObserver = viewModel.searchHistory.test()
         val item = "to be deleted"
         viewModel.onQuerySubmit(item)

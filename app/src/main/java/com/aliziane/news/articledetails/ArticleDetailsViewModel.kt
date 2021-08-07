@@ -13,11 +13,12 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 
 class ArticleDetailsViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
     private val communityApi: CommunityApi,
-    dispatcherProvider: DispatcherProvider
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     private val _article = savedStateHandle.getLiveData<String>(KEY_ARTICLE)
@@ -49,8 +50,17 @@ class ArticleDetailsViewModel @AssistedInject constructor(
     private val _message = Channel<Int>(Channel.BUFFERED)
     val message = _message.receiveAsFlow()
 
+    private val _navigateToFullArticle = Channel<String>(Channel.BUFFERED)
+    val navigateToFullArticle = _navigateToFullArticle.receiveAsFlow()
+
     fun onSortByChange(sortBy: SortBy) {
         _sortBy.value = sortBy
+    }
+
+    fun onReadMoreClick() {
+        val article =
+            savedStateHandle.requireArgument<String>(KEY_ARTICLE).decodeFromString<Article>()
+        viewModelScope.launch(dispatcherProvider.main) { _navigateToFullArticle.send(article.url) }
     }
 
     companion object {

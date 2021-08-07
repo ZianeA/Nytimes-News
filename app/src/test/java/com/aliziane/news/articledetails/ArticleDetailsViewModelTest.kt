@@ -65,7 +65,7 @@ class ArticleDetailsViewModelTest {
     }
 
     @Test
-    fun `sort comments`() {
+    fun `sort comments`() = coroutineRule.runBlockingTest {
         val testObserver = viewModel.comments.test()
 
         assertSoftly {
@@ -78,6 +78,13 @@ class ArticleDetailsViewModelTest {
             viewModel.onSortByChange(SortBy.OLD)
             testObserver.value() shouldBe fakeApi.oldResponse.toComments()
         }
+    }
+
+    @Test
+    fun `display full article when read more is clicked`() = coroutineRule.runBlockingTest {
+        viewModel.onReadMoreClick()
+
+        viewModel.navigateToFullArticle.test { awaitItem() shouldBe fakeArticle.url }
     }
 }
 

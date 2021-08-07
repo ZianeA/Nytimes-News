@@ -12,10 +12,11 @@ class ArticleDetailsEpoxyController : AsyncEpoxyController() {
     var isLoading by EpoxyAutoBuild(false)
 
     var onSortByClickListener: (() -> Unit)? = null
+    var onReadMoreClickListener: (() -> Unit)? = null
 
     override fun buildModels() {
         article?.let {
-            ArticleDetailsEpoxyModel(it)
+            ArticleDetailsEpoxyModel(it) { onReadMoreClickListener?.invoke() }
                 .id(it.url)
                 .addTo(this)
         }
