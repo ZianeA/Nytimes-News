@@ -8,8 +8,10 @@ import com.aliziane.news.home.Article
 class ArticleDetailsEpoxyController : AsyncEpoxyController() {
     var article by EpoxyAutoBuild<Article?>(null)
     var comments by EpoxyAutoBuild<List<Comment>?>(null)
-    var sortBy by EpoxyAutoBuild("New")
+    var sortBy by EpoxyAutoBuild("")
     var isLoading by EpoxyAutoBuild(false)
+
+    var onSortByClickListener: (() -> Unit)? = null
 
     override fun buildModels() {
         article?.let {
@@ -18,23 +20,24 @@ class ArticleDetailsEpoxyController : AsyncEpoxyController() {
                 .addTo(this)
         }
 
-        SortByEpoxyModel(sortBy)
+        SortByEpoxyModel(sortBy) { onSortByClickListener?.invoke() }
             .id(sortBy)
             .addTo(this)
 
-        SimpleEpoxyModel(R.layout.item_comment_loading_state)
-            .id("Comment Loading State")
-            .addIf(isLoading, this)
-
-        comments?.forEach {
-            CommentEpoxyModel(it)
-                .id(it.id)
+        if (isLoading) {
+            SimpleEpoxyModel(R.layout.item_comment_loading_state)
+                .id("Comment Loading State")
                 .addTo(this)
+        } else {
+            comments?.forEach {
+                CommentEpoxyModel(it)
+                    .id(it.id)
+                    .addTo(this)
+            }
 
+            SimpleEpoxyModel(R.layout.item_comment_empty_state)
+                .id("Comment Empty State")
+                .addIf(comments?.isEmpty() ?: false, this)
         }
-
-        SimpleEpoxyModel(R.layout.item_comment_empty_state)
-            .id("Comment Empty State")
-            .addIf(comments?.isEmpty() ?: false, this)
     }
 }

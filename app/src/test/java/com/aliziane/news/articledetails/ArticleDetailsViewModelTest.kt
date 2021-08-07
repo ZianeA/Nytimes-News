@@ -9,10 +9,8 @@ import com.aliziane.news.common.encodeToString
 import com.aliziane.news.fakeArticle
 import com.jraska.livedata.test
 import io.kotest.assertions.assertSoftly
-import io.kotest.inspectors.forAll
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import kotlinx.datetime.Clock
 import org.junit.Rule
 import org.junit.Test
@@ -33,16 +31,12 @@ class ArticleDetailsViewModelTest {
 
     @Test
     fun `display article`() = coroutineRule.runBlockingTest {
-        viewModel.article.test()
-
-        viewModel.article.value shouldBe fakeArticle
+        viewModel.article.test().value() shouldBe fakeArticle
     }
 
     @Test
     fun `display comments`() = coroutineRule.runBlockingTest {
-        viewModel.comments.test()
-
-        viewModel.comments.value shouldBe fakeApi.response.toComments()
+        viewModel.comments.test().value() shouldBe fakeApi.newResponse.toComments()
     }
 
     @Test
@@ -67,22 +61,44 @@ class ArticleDetailsViewModelTest {
     fun `display empty state when there are not comments`() = coroutineRule.runBlockingTest {
         fakeApi.returnEmpty = true
 
-        viewModel.comments.test()
+        viewModel.comments.test().value().shouldBeEmpty()
+    }
 
-        viewModel.comments.value.shouldBeEmpty()
+    @Test
+    fun `sort comments`() {
+        val testObserver = viewModel.comments.test()
+
+        assertSoftly {
+            viewModel.onSortByChange(SortBy.NEW)
+            testObserver.value() shouldBe fakeApi.newResponse.toComments()
+
+            viewModel.onSortByChange(SortBy.TOP)
+            testObserver.value() shouldBe fakeApi.topResponse.toComments()
+
+            viewModel.onSortByChange(SortBy.OLD)
+            testObserver.value() shouldBe fakeApi.oldResponse.toComments()
+        }
     }
 }
 
 class FakeCommunityApi : CommunityApi {
-    var response = createResponse(fakeComment)
+    var newResponse = createResponse(fakeComment, fakeComment2, fakeComment3)
+    var oldResponse = createResponse(fakeComment3, fakeComment2, fakeComment)
+    var topResponse = createResponse(fakeComment2, fakeComment3, fakeComment2)
     var emptyResponse = createResponse()
+
     var fail = false
     var returnEmpty = false
+
     override suspend fun getComments(url: String, sort: CommunityApi.Sort): CommentResponse {
         return when {
             fail -> throw IOException()
             returnEmpty -> emptyResponse
-            url == fakeArticle.url -> response
+            url == fakeArticle.url -> when (sort) {
+                CommunityApi.Sort.NEWEST -> newResponse
+                CommunityApi.Sort.OLDEST -> oldResponse
+                CommunityApi.Sort.READER -> topResponse
+            }
             else -> emptyResponse
         }
     }
@@ -101,5 +117,7 @@ val fakeComment = Comment(
     202,
     303
 )
+val fakeComment2 = fakeComment.copy(id = 202)
+val fakeComment3 = fakeComment.copy(id = 303)
 
 private const val ARTICLE_KEY = "article"

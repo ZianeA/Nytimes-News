@@ -19,6 +19,9 @@
         <argument
             android:name="article"
             app:argType="string" />
+        <action
+            android:id="@+id/action_articleDetailsFragment_to_sortByDialog"
+            app:destination="@id/sortByDialog" />
     </fragment>
     <navigation
         android:id="@+id/nav_search"
@@ -38,4 +41,12 @@
     <action
         android:id="@+id/action_global_articleDetailsFragment"
         app:destination="@id/articleDetailsFragment" />
+    <dialog
+        android:id="@+id/sortByDialog"
+        android:name="com.aliziane.news.articledetails.SortByDialog"
+        android:label="SortByDialog">
+        <argument
+            android:name="selected_sort_by"
+            app:argType="com.aliziane.news.articledetails.SortBy" />
+    </dialog>
 </navigation>

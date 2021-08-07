@@ -2,7 +2,7 @@ package com.aliziane.news.common
 
 import android.app.Application
 import com.aliziane.news.home.HomeFragment
-import com.aliziane.news.articledetails.ArticleDetailsFragment
+import com.aliziane.news.articledetails.ArticleDetailsViewModel
 import com.aliziane.news.articlesearch.SearchViewModel
 import com.aliziane.news.books.BooksViewModel
 import dagger.BindsInstance
@@ -15,8 +15,8 @@ import javax.inject.Singleton
 interface AppComponent {
     fun inject(activity: MainActivity)
     fun inject(homeFragment: HomeFragment)
-    fun inject(articleDetailsFragment: ArticleDetailsFragment)
 
+    val articleDetailsViewModel: Provider<ArticleDetailsViewModel.Factory>
     val searchViewModel: Provider<SearchViewModel.Factory>
     val booksViewModel: Provider<BooksViewModel>
 

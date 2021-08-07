@@ -11,7 +11,7 @@ interface CommunityApi {
     ): CommentResponse
 
     enum class Sort(private val value: String) {
-        NEWEST("newest"), OLDEST("oldest"), TOP("reader");
+        NEWEST("newest"), OLDEST("oldest"), READER("reader");
 
         override fun toString() = value
     }
