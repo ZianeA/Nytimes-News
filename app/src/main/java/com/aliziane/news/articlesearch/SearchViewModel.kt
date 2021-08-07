@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.*
 class SearchViewModel @AssistedInject constructor(
     @Assisted private val savedStateHandle: SavedStateHandle,
     private val api: SearchApi,
+    private val preferenceStorage: PreferenceStorage,
     private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
@@ -39,6 +40,9 @@ class SearchViewModel @AssistedInject constructor(
             }
         }
         .asLiveData(dispatcherProvider.main)
+
+    private val _searchHistory = MutableLiveData(preferenceStorage.searchHistory)
+    val searchHistory: LiveData<Set<String>> get() = _searchHistory
 
     val searchQuery = savedStateHandle.getLiveData(KEY_RESULT_QUERY, "")
 
@@ -64,10 +68,23 @@ class SearchViewModel @AssistedInject constructor(
 
     fun onQueryChange(query: String?) {
         savedStateHandle.set(KEY_SUGGESTION_QUERY, query.orEmpty())
+
+        if (query.isNullOrBlank()) {
+            _searchHistory.value = preferenceStorage.searchHistory
+        } else {
+            _searchHistory.value = _searchHistory.value!!.filter { it.contains(query) }.toSet()
+        }
     }
 
     fun onQuerySubmit(query: String?) {
         savedStateHandle.set(KEY_RESULT_QUERY, query.orEmpty())
+        if (!query.isNullOrBlank()) {
+            if (preferenceStorage.searchHistory.size >= SEARCH_HISTORY_CAPACITY) {
+                preferenceStorage.searchHistory -= preferenceStorage.searchHistory.first()
+            }
+            preferenceStorage.searchHistory += query
+            _searchHistory.value = preferenceStorage.searchHistory
+        }
     }
 
     fun onArticleClick(article: Article) {
@@ -76,9 +93,15 @@ class SearchViewModel @AssistedInject constructor(
         }
     }
 
+    fun onDeleteSearchHistoryItem(item: String) {
+        preferenceStorage.searchHistory -= item
+        _searchHistory.value = _searchHistory.value!! - item
+    }
+
     companion object {
         private const val KEY_RESULT_QUERY = "result_query"
         private const val KEY_SUGGESTION_QUERY = "suggestion_query"
+        private const val SEARCH_HISTORY_CAPACITY = 5
     }
 
     @AssistedFactory

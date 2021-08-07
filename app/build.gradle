@@ -94,4 +94,5 @@ dependencies {
     implementation 'com.github.rubensousa:gravitysnaphelper:2.2.1'
 
     implementation "io.coil-kt:coil:1.3.0"
+    implementation 'hu.autsoft:krate:1.1.0'
 }

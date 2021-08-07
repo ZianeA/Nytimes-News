@@ -5,7 +5,7 @@ import com.aliziane.news.articledetails.EpoxyAutoBuild
 import com.aliziane.news.home.Article
 
 class SearchEpoxyController : AsyncEpoxyController() {
-    var history by EpoxyAutoBuild(emptyList<String>())
+    var history by EpoxyAutoBuild(emptySet<String>())
     var suggestions by EpoxyAutoBuild(emptyList<Article>())
 
     var onSuggestionClickListener: ((suggestion: Article) -> Unit)? = null

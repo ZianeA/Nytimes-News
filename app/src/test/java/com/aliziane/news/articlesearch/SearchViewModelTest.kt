@@ -11,7 +11,8 @@ import com.aliziane.news.fakeDoc
 import com.google.testing.junit.testparameterinjector.TestParameter
 import com.google.testing.junit.testparameterinjector.TestParameterInjector
 import com.jraska.livedata.test
-import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.assertions.assertSoftly
+import io.kotest.matchers.collections.*
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
@@ -28,10 +29,16 @@ class SearchViewModelTest {
     @get:Rule
     val coroutineRule = CoroutineRule()
 
-    private val fakeApi = FakeSearchApi()
     private val savedStateHandle = SavedStateHandle()
+    private val fakeApi = FakeSearchApi()
+    private val fakeStorage = FakePreferenceStorage()
     private val viewModel =
-        SearchViewModel(savedStateHandle, fakeApi, coroutineRule.testDispatcherProvider)
+        SearchViewModel(
+            savedStateHandle,
+            fakeApi,
+            fakeStorage,
+            coroutineRule.testDispatcherProvider
+        )
 
     @Test
     fun `display search result`() = coroutineRule.runBlockingTest {
@@ -144,6 +151,78 @@ class SearchViewModelTest {
 
         viewModel.navigateToArticleDetails.test { awaitItem() shouldBe fakeArticle.encodeToString() }
     }
+
+    @Test
+    fun `display search history`() {
+        viewModel.searchHistory.test().value() shouldBe fakeStorage.searchHistory
+    }
+
+    @Test
+    fun `save search history`() {
+        val testObserver = viewModel.searchHistory.test()
+
+        val item = "new history"
+        viewModel.onQuerySubmit(item)
+
+        assertSoftly {
+            fakeStorage.searchHistory shouldContain item
+            testObserver.value() shouldContain item
+        }
+    }
+
+    @Test
+    fun `ignore search history when null or blank`(
+        @TestParameter("null", "", "  ") query: String?
+    ) {
+        viewModel.onQuerySubmit(query)
+
+        fakeStorage.searchHistory.shouldNotContain(query)
+    }
+
+    @Test
+    fun `delete old search history when exceeding capacity`() {
+        // Create a set containing the string representation of the numbers
+        // from 0 to (exclusive) capacity of the search history
+        val history = List(SEARCH_HISTORY_MAX_ITEMS) { i -> i.toString() }.toSet()
+        fakeStorage.searchHistory = history
+
+        viewModel.onQuerySubmit("new history")
+
+        assertSoftly {
+            fakeStorage.searchHistory shouldHaveSize SEARCH_HISTORY_MAX_ITEMS
+            fakeStorage.searchHistory shouldBe history.drop(1) + "new history"
+        }
+    }
+
+    @Test
+    fun `filter search history when query changes`() {
+        val testObserver = viewModel.searchHistory.test()
+        fakeStorage.searchHistory = setOf("apple", "banana")
+        // Trigger the update
+        viewModel.onQuerySubmit("watermelon")
+
+        assertSoftly {
+            viewModel.onQueryChange("b")
+            testObserver.value() shouldBe setOf("banana")
+
+            viewModel.onQueryChange(" ")
+            testObserver.value() shouldBe setOf("apple", "banana", "watermelon")
+        }
+    }
+
+    @Test
+    fun `delete search history`() {
+        val testObserver = viewModel.searchHistory.test()
+        val item = "to be deleted"
+        viewModel.onQuerySubmit(item)
+
+        viewModel.onDeleteSearchHistoryItem(item)
+
+        assertSoftly {
+            fakeStorage.searchHistory shouldNotContain item
+            testObserver.value() shouldNotContain item
+        }
+    }
 }
 
 class FakeSearchApi : SearchApi {
@@ -166,3 +245,9 @@ class FakeSearchApi : SearchApi {
     private fun createResponse(vararg docs: SearchResponse.Response.Doc) =
         SearchResponse(SearchResponse.Response(docs.toList()))
 }
+
+class FakePreferenceStorage : PreferenceStorage {
+    override var searchHistory: Set<String> = setOf("fake history")
+}
+
+private const val SEARCH_HISTORY_MAX_ITEMS = 5

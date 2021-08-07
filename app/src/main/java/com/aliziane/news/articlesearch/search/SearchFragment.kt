@@ -40,17 +40,18 @@ class SearchFragment : Fragment(R.layout.fragment_search),
 
         val epoxyController = SearchEpoxyController()
         epoxyController.onSuggestionClickListener = viewModel::onArticleClick
+        epoxyController.onHistoryClickListener = ::submitQuery
+        epoxyController.onHistoryDeleteListener = viewModel::onDeleteSearchHistoryItem
+
         binding.recyclerView.setController(epoxyController)
         binding.recyclerView.setItemSpacingDp(8)
-        epoxyController.history = listOf("My knee", "Balloon")
 
         binding.searchBoxLayout.setStartIconOnClickListener { navController.navigateUp() }
         binding.searchBox.apply {
             focusAndShowKeyboard()
             setOnEditorActionListener { tv, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    viewModel.onQuerySubmit(tv.text?.toString())
-                    navController.navigateUp()
+                    submitQuery(tv.text?.toString())
                     true
                 } else {
                     false
@@ -64,6 +65,7 @@ class SearchFragment : Fragment(R.layout.fragment_search),
         }
 
         viewModel.searchSuggestions.observe(viewLifecycleOwner) { epoxyController.suggestions = it }
+        viewModel.searchHistory.observe(viewLifecycleOwner) { epoxyController.history = it }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressIndicator.showIf { isLoading }
@@ -85,6 +87,11 @@ class SearchFragment : Fragment(R.layout.fragment_search),
                 navController.navigate(action)
             }
             .launchIn(lifecycleScope)
+    }
+
+    private fun submitQuery(query: String?) {
+        viewModel.onQuerySubmit(query)
+        navController.navigateUp()
     }
 
     override fun onDestinationChanged(

@@ -3,6 +3,7 @@ package com.aliziane.news.common
 import android.app.Application
 import com.aliziane.news.home.HomeFragment
 import com.aliziane.news.articledetails.ArticleDetailsViewModel
+import com.aliziane.news.articlesearch.PreferenceStorageModule
 import com.aliziane.news.articlesearch.SearchViewModel
 import com.aliziane.news.books.BooksViewModel
 import dagger.BindsInstance
@@ -11,7 +12,7 @@ import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [NetworkModule::class, DispatcherModule::class])
+@Component(modules = [NetworkModule::class, DispatcherModule::class, PreferenceStorageModule::class])
 interface AppComponent {
     fun inject(activity: MainActivity)
     fun inject(homeFragment: HomeFragment)
